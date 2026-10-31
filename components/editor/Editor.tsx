@@ -813,11 +813,7 @@ function EditorInner() {
                 <br />
                 <em>draw it out.</em>
               </h1>
-              <p>
-                Pick a shape. Sketch a process.
-                <br />
-                Make a complicated thing a little clearer.
-              </p>
+              <p>Pick a shape. Sketch a process.</p>
               <button
                 onClick={() => {
                   const bounds = canvasRef.current?.getBoundingClientRect();
@@ -839,16 +835,6 @@ function EditorInner() {
               </small>
             </div>
           )}
-          <div className="canvas-caption">
-            <span className="crosshair">+</span>{" "}
-            {tool === "select"
-              ? "SELECT & SKETCH"
-              : tool === "pan"
-                ? "PAN THE DRAWING"
-                : tool === "connect"
-                  ? "SELECT SOURCE, THEN DESTINATION"
-                  : `CLICK TO PLACE ${tool === "terminal" ? "START / END" : tool.toUpperCase()}`}
-          </div>
           <div className="zoom-controls">
             <button aria-label="Zoom out" onClick={() => void rf.zoomOut()}>
               <Minus size={15} />

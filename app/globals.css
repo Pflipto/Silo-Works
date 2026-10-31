@@ -150,6 +150,7 @@ select {
   border-radius: 0;
 }
 .save-status {
+  margin-left: auto;
   display: flex;
   gap: 6px;
   align-items: center;
@@ -431,23 +432,6 @@ select {
   color: #646557;
   margin-top: 14px;
 }
-.canvas-caption {
-  position: absolute;
-  bottom: 25px;
-  left: 25px;
-  color: #626858;
-  font: 8px monospace;
-  letter-spacing: 1.2px;
-  pointer-events: none;
-  display: flex;
-  gap: 9px;
-  align-items: center;
-}
-.crosshair {
-  font-size: 19px;
-  font-weight: 400;
-  color: #747968;
-}
 .zoom-controls {
   position: absolute;
   bottom: 22px;
@@ -513,6 +497,7 @@ select {
   margin-left: 15px;
 }
 .help-button {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1011,12 +996,6 @@ select {
   }
   .tool-button svg {
     width: 17px;
-  }
-  .canvas-caption {
-    left: 12px;
-    bottom: 62px;
-    font-size: 7px;
-    letter-spacing: 0.7px;
   }
   .zoom-controls {
     bottom: 15px;

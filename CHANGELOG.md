@@ -11,3 +11,4 @@
 - PNG/SVG export uses html-to-image to preserve routed edges and embedded local fonts. SVG contains foreignObject and targets modern browser/document workflows; native editable backups use JSON.
 - ESLint 9 matches the peer requirements of Next.js's React, import, and accessibility plugins; the lockfile is verified with npm ci.
 - Refined the identity toward the brand board: outlined Anton industrial wordmark, engraved silo silhouette, Inter heritage signature, horizontal/stacked vector assets, and a simplified small-size favicon. Font licenses are included; no runtime logo-font dependency.
+- Simplified the empty-state copy, removed the bottom-left tool caption, and aligned the header actions and footer help/attribution group to the right edge.
