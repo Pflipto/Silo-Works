@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -464,10 +465,15 @@ function EditorInner() {
           onClick={() => setAbout(true)}
           aria-label="About Silo Works"
         >
-          <SiloMark />
-          <span>
-            SILO WORKS<small>PRAIRIE SYSTEMS & ENGINEERING</small>
-          </span>
+          <Image
+            className="brand-lockup"
+            src="/brand/silo-works.svg"
+            alt="Silo Works — Prairie Systems & Engineering"
+            width={390}
+            height={102}
+            priority
+            unoptimized
+          />
         </button>
         <div className="document-heading">
           <span className="eyebrow drawing-number">FIELD DRAWING / 002</span>
@@ -807,11 +813,7 @@ function EditorInner() {
                 <br />
                 <em>draw it out.</em>
               </h1>
-              <p>
-                Pick a shape. Sketch a process.
-                <br />
-                Make a complicated thing a little clearer.
-              </p>
+              <p>Pick a shape. Sketch a process.</p>
               <button
                 onClick={() => {
                   const bounds = canvasRef.current?.getBoundingClientRect();
@@ -833,16 +835,6 @@ function EditorInner() {
               </small>
             </div>
           )}
-          <div className="canvas-caption">
-            <span className="crosshair">+</span>{" "}
-            {tool === "select"
-              ? "SELECT & SKETCH"
-              : tool === "pan"
-                ? "PAN THE DRAWING"
-                : tool === "connect"
-                  ? "SELECT SOURCE, THEN DESTINATION"
-                  : `CLICK TO PLACE ${tool === "terminal" ? "START / END" : tool.toUpperCase()}`}
-          </div>
           <div className="zoom-controls">
             <button aria-label="Zoom out" onClick={() => void rf.zoomOut()}>
               <Minus size={15} />
@@ -967,22 +959,5 @@ function EditorInner() {
         </Modal>
       )}
     </main>
-  );
-}
-function SiloMark() {
-  return (
-    <svg
-      className="silo-mark"
-      viewBox="0 0 42 52"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M5 49h33M10 48V19L23 8l13 11v29M9 19h28M13 24h20M13 30h20M13 36h20M13 42h20M18 48V20M28 48V20M21 9V3h4v6M6 48V23M3 23h6"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path d="M10 19L23 12l13 7" stroke="currentColor" strokeWidth="1.3" />
-    </svg>
   );
 }
