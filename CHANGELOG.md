@@ -10,3 +10,4 @@
 - Native dialogs provide focus containment and restoration. Inline labels commit with Enter or blur and cancel with Escape. Active field edits flush before unload.
 - PNG/SVG export uses html-to-image to preserve routed edges and embedded local fonts. SVG contains foreignObject and targets modern browser/document workflows; native editable backups use JSON.
 - ESLint 9 matches the peer requirements of Next.js's React, import, and accessibility plugins; the lockfile is verified with npm ci.
+- Refined the identity toward the brand board: outlined Anton industrial wordmark, engraved silo silhouette, Inter heritage signature, horizontal/stacked vector assets, and a simplified small-size favicon. Font licenses are included; no runtime logo-font dependency.

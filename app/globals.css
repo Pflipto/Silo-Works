@@ -117,24 +117,10 @@ select {
   padding-right: 27px;
   border-right: 1px solid var(--line);
 }
-.brand > span {
-  font-size: 24px;
-  letter-spacing: -1.3px;
-  font-weight: 700;
-  line-height: 1.05;
-}
-.brand small {
+.brand-lockup {
   display: block;
-  font-family: monospace;
-  font-size: 7px;
-  letter-spacing: 1.35px;
-  font-weight: 400;
-  margin-top: 7px;
-  color: var(--rust);
-}
-.silo-mark {
-  height: 45px;
-  width: 36px;
+  width: 238px;
+  height: auto;
 }
 .document-heading {
   display: flex;
@@ -898,12 +884,8 @@ select {
   .brand {
     padding-right: 15px;
   }
-  .brand > span {
-    font-size: 20px;
-  }
-  .brand small {
-    font-size: 6px;
-    letter-spacing: 1px;
+  .brand-lockup {
+    width: 205px;
   }
   .save-status {
     font-size: 9px;
@@ -937,12 +919,8 @@ select {
     border: 0;
     padding: 0;
   }
-  .brand > span {
-    font-size: 19px;
-  }
-  .silo-mark {
-    width: 28px;
-    height: 36px;
+  .brand-lockup {
+    width: 172px;
   }
   .document-heading {
     max-width: none;
