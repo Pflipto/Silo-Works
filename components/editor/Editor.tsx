@@ -34,6 +34,7 @@ import {
   Maximize,
   Upload,
   FilePlus2,
+  RotateCcw,
   ArrowUpRight,
   X,
   HelpCircle,
@@ -107,6 +108,7 @@ function EditorInner() {
   const [about, setAbout] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [exporting, setExporting] = useState(false);
+  const [resetRequested, setResetRequested] = useState(false);
   const [replacement, setReplacement] = useState<DiagramDocument | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -445,6 +447,7 @@ function EditorInner() {
     setMessage("");
   };
   const requestReplace = (next: DiagramDocument) => {
+    setResetRequested(false);
     if (
       doc?.nodes.length ||
       (doc && doc.title !== "Untitled drawing") ||
@@ -561,6 +564,20 @@ function EditorInner() {
           >
             <WandSparkles size={15} />
             <span>Tidy Up</span>
+          </button>
+          <button
+            className="reset-button"
+            aria-label="Reset drawing"
+            title="Back to the invention room!"
+            disabled={!doc || exporting}
+            onClick={() => {
+              setMenu(false);
+              setResetRequested(true);
+              setReplacement(emptyDocument());
+            }}
+          >
+            <RotateCcw size={15} />
+            <span>Reset</span>
           </button>
           <div className="export-container">
             <button
@@ -1017,11 +1034,18 @@ function EditorInner() {
       {replacement && (
         <Modal labelledBy="replace-title" onClose={() => setReplacement(null)}>
           <section className="modal">
-            <h2 id="replace-title">Replace this drawing?</h2>
+            {resetRequested && (
+              <p className="eyebrow">Back to the invention room!</p>
+            )}
+            <h2 id="replace-title">
+              {resetRequested ? "Reset this drawing?" : "Replace this drawing?"}
+            </h2>
             <p>
               {storageBlocked
                 ? "Unreadable saved data will be replaced."
-                : "Your current drawing will be replaced in this browser."}{" "}
+                : resetRequested
+                  ? "Clear the workbench for a fresh batch of peculiar possibilities. This resets your drawing and title in this browser."
+                  : "Your current drawing will be replaced in this browser."}{" "}
               Download a JSON backup first if you want to keep it.
             </p>
             <div className="modal-actions">
@@ -1035,7 +1059,7 @@ function EditorInner() {
                 className="primary"
                 onClick={() => replaceDocument(replacement)}
               >
-                Replace drawing
+                {resetRequested ? "Reset drawing" : "Replace drawing"}
               </button>
             </div>
           </section>

@@ -21,6 +21,8 @@ Choose a shape tool and click the canvas, or use **Add your first shape**. Enter
 
 Shift-click or Shift-drag a selection rectangle to select multiple objects. Space-drag pans; the wheel zooms. Delete removes the selection. Ctrl/⌘ Z undoes and Ctrl/⌘ Shift Z redoes. V/H/P/D/S/T/A/C select tools. System uses a database cylinder. Hover or focus the AI tool (or click it) to choose LLM or MCP, then place the shape. Change its AI type later in Shape details. LLM uses a brain symbol; MCP uses a flanged pipe symbol. AI shapes are diagram symbols; they do not call external services.
 
+**Reset**, beside Export, opens a confirmation before clearing the drawing and title. Cancel keeps your work; download JSON from the dialog for a backup. You can undo a reset during the current session.
+
 Autosave belongs to this browser/device; clearing browser data removes it. Download editable JSON for a backup. Import validates v1 schema and topology and asks before replacing a nonempty drawing. Unreadable stored data is preserved and autosave paused until explicit replacement. PNG/SVG exports contain only the drawing on cream paper; JSON preserves IDs, metadata, connections, title, and viewport. SVG uses embedded HTML via `foreignObject`, supported by modern browsers; some vector design applications may not support it.
 
 ## Validate
