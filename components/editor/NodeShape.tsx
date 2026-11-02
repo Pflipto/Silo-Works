@@ -47,10 +47,10 @@ export default function NodeShape({
         >
           {data.aiType === "mcp" ? (
             <>
-              <path className="pipe-body" d="M29 23H155V87H29Z" />
-              <path className="pipe-highlight" d="M40 26H50V84H40Z" />
-              <path className="pipe-rim" d="M12 5H172V27H12Z" />
-              <path className="symbol-detail" d="M20 22H164M153 32V80" />
+              <path className="pipe-body" d="M54 17H130V91H54Z" />
+              <path className="pipe-highlight" d="M61 20H69V88H61Z" />
+              <path className="pipe-rim" d="M44 1H140V21H44Z" />
+              <path className="symbol-detail" d="M50 17H134M127 26V85" />
             </>
           ) : (
             <>

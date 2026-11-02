@@ -23,3 +23,5 @@
 - Added contextual connected creation on all four sides, larger drag handles, and position-based side selection for the Connect tool.
 
 - Refined AI symbols: LLM uses a brain with folded contours; MCP uses a green flanged pipe. Both use inline vectors for clear image exports.
+
+- Slimmed the MCP pipe into a tall shaft and moved the LLM badge into clear space with larger, stronger text.
