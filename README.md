@@ -17,7 +17,7 @@ The editor runs on port 3001. `npm run build && npm start` runs a production bui
 
 ## Use
 
-Choose a shape tool and click the canvas, or use **Add your first shape**. Enter a label and press Enter. Select or hover a shape and use a **+** on its left, right, top, or bottom to add a connected process in that direction. Drag from any side (left, right, top, or bottom) to any side of another shape to connect them, or use Connect and click source then destination; it chooses facing sides based on their positions. Double-click a label to edit it. Select a connection or shape to edit its notes, description, or HTTP(S) reference. Tidy Up runs only on request.
+Choose a shape tool and click the canvas, or use **Add something spectacular**. Enter a label and press Enter. Select or hover a shape and use a **+** on its left, right, top, or bottom to add a connected process in that direction. Drag from any side (left, right, top, or bottom) to any side of another shape to connect them, or use Connect and click source then destination; it chooses facing sides based on their positions. Double-click a label to edit it. Select a connection or shape to edit its notes, description, or HTTP(S) reference. Tidy Up runs only on request.
 
 Shift-click or Shift-drag a selection rectangle to select multiple objects. Space-drag pans; the wheel zooms. Delete removes the selection. Ctrl/⌘ Z undoes and Ctrl/⌘ Shift Z redoes. V/H/P/D/S/T/A/C select tools. System uses a database cylinder. Hover or focus the AI tool (or click it) to choose LLM or MCP, then place the shape. Change its AI type later in Shape details. LLM uses a brain symbol; MCP uses a flanged pipe symbol. AI shapes are diagram symbols; they do not call external services.
 
