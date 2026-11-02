@@ -911,7 +911,6 @@ function EditorInner() {
                 <ArrowRight size={27} />
                 <span className="round" />
               </div>
-              <span className="eyebrow">A LITTLE CLARITY STARTS HERE</span>
               <h1>
                 Might as well
                 <br />
@@ -934,9 +933,6 @@ function EditorInner() {
                 <Plus size={16} />
                 Add your first shape
               </button>
-              <small>
-                Or choose a shape from the toolbar and click anywhere.
-              </small>
             </div>
           )}
           <div className="zoom-controls">
