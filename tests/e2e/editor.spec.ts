@@ -31,7 +31,7 @@ test("golden path: fork, notes, move, tidy, history, reload, exports and import"
     page.getByRole("heading", { name: "Might as well draw it out." }),
   ).toBeVisible();
   await field(page, "Drawing title", "Patient Intake");
-  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await page.getByRole("button", { name: "Add something spectacular" }).click();
   await label(page, "Patient Registers");
   await page
     .getByRole("button", { name: "Add step after Patient Registers" })
@@ -251,7 +251,7 @@ test("storage quota failure is visible and work stays editable", async ({
   });
   await page.goto("/");
   await expect(page.getByRole("status")).toHaveText("Could not save");
-  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await page.getByRole("button", { name: "Add something spectacular" }).click();
   await label(page, "Still here");
   await expect(page.getByText("Still here", { exact: true })).toBeVisible();
   await expect(page.locator(".message-banner")).toContainText(
@@ -302,7 +302,7 @@ test("keyboard editing, cancellation, movement persistence, and help focus", asy
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await page.getByRole("button", { name: "Add something spectacular" }).click();
   await label(page, "Original");
   await saved(page);
   const d = await state(page);
@@ -498,7 +498,7 @@ test("contextual plus creates connected steps left, above, and below", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await page.getByRole("button", { name: "Add something spectacular" }).click();
   await label(page, "Origin");
   await saved(page);
   for (const direction of ["left", "top", "bottom"]) {
@@ -539,7 +539,7 @@ test("header reset confirms, cancels safely, and clears the saved drawing", asyn
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await page.getByRole("button", { name: "Add something spectacular" }).click();
   await label(page, "Keep this batch");
   await field(page, "Drawing title", "Factory plans");
   await saved(page);

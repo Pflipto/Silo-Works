@@ -911,13 +911,11 @@ function EditorInner() {
                 <ArrowRight size={27} />
                 <span className="round" />
               </div>
-              <span className="eyebrow">A LITTLE CLARITY STARTS HERE</span>
               <h1>
                 Might as well
                 <br />
                 <em>draw it out.</em>
               </h1>
-              <p>Pick a shape. Sketch a process.</p>
               <button
                 onClick={() => {
                   const bounds = canvasRef.current?.getBoundingClientRect();
@@ -932,11 +930,8 @@ function EditorInner() {
                 }}
               >
                 <Plus size={16} />
-                Add your first shape
+                Add something spectacular
               </button>
-              <small>
-                Or choose a shape from the toolbar and click anywhere.
-              </small>
             </div>
           )}
           <div className="zoom-controls">
