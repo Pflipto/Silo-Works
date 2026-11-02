@@ -1230,3 +1230,51 @@ select {
 .grow-button:focus-visible {
   pointer-events: auto;
 }
+
+.reset-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  background: var(--rust);
+  color: #fffaf0;
+}
+.reset-button:hover:not(:disabled) {
+  background: #7d3f29;
+}
+@media (max-width: 800px) {
+  .reset-button {
+    height: 31px;
+    padding: 0 9px;
+  }
+}
+@media (max-width: 800px) {
+  .save-status {
+    position: static;
+    flex-basis: 100%;
+    justify-content: flex-end;
+    margin-top: -6px;
+    margin-bottom: -6px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 800px) {
+  .header-actions {
+    gap: 8px;
+  }
+  .tidy-button span {
+    display: none;
+  }
+}
+
+.modal-actions .primary.reset-confirm {
+  background: var(--rust);
+  color: #fffaf0;
+}
+.modal-actions .primary.reset-confirm:hover:not(:disabled) {
+  background: #7d3f29;
+}

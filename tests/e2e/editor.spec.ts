@@ -534,3 +534,51 @@ test("contextual plus creates connected steps left, above, and below", async ({
     await page.getByRole("button", { name: "Fit drawing" }).click();
   }
 });
+
+test("header reset confirms, cancels safely, and clears the saved drawing", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await label(page, "Keep this batch");
+  await field(page, "Drawing title", "Factory plans");
+  await saved(page);
+  const original = await state(page);
+  const reset = page.getByRole("button", {
+    name: "Scrap-It-All",
+    exact: true,
+  });
+  await reset.click();
+  const dialog = page.getByRole("dialog", { name: "Reset this drawing?" });
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByText("Back to the invention room!", { exact: true }),
+  ).toBeVisible();
+  await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(reset).toBeFocused();
+  expect(await state(page)).toEqual(original);
+  await reset.click();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  expect(await state(page)).toEqual(original);
+  await reset.click();
+  await dialog
+    .getByRole("button", { name: "Reset drawing", exact: true })
+    .click();
+  await saved(page);
+  expect((await state(page)).nodes).toEqual([]);
+  expect((await state(page)).edges).toEqual([]);
+  expect((await state(page)).title).toBe("Untitled drawing");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await saved(page);
+  expect((await state(page)).nodes).toEqual(original.nodes);
+  expect((await state(page)).title).toBe(original.title);
+  await reset.click();
+  await dialog
+    .getByRole("button", { name: "Reset drawing", exact: true })
+    .click();
+  await saved(page);
+  await page.reload();
+  await saved(page);
+  expect((await state(page)).nodes).toEqual([]);
+});

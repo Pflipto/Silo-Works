@@ -25,3 +25,7 @@
 - Refined AI symbols: LLM uses a brain with folded contours; MCP uses a green flanged pipe. Both use inline vectors for clear image exports.
 
 - Slimmed the MCP pipe into a tall shaft and moved the LLM badge into clear space with larger, stronger text.
+
+- Added a rust-orange Reset button before Export, with “Back to the invention room!” copy, confirmation, JSON backup, and existing undo support.
+
+- Renamed the header reset action to Scrap-It-All with the requested four-line tooltip.
