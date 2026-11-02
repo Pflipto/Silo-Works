@@ -126,3 +126,40 @@ test("layout is opt-in, nonmutating, and topology-preserving for chain/fork/disc
       assert.ok(out.nodes[1].position.x > out.nodes[0].position.x);
   }
 });
+
+test("AI types and all connection sides survive JSON, history and layout", () => {
+  const d = fixture();
+  d.nodes[0].data = { kind: "ai", label: "Model", aiType: "llm" };
+  d.nodes[1].data = { kind: "ai", label: "Tools", aiType: "mcp" };
+  d.edges = ["in", "out", "top", "bottom"].map((side, i) => ({
+    id: `side-${i}`,
+    source: d.nodes[0].id,
+    target: d.nodes[1].id,
+    sourceHandle: side as "in" | "out" | "top" | "bottom",
+    targetHandle: side as "in" | "out" | "top" | "bottom",
+    data: { label: side },
+  }));
+  const restored = parseDocument(JSON.parse(JSON.stringify(d)));
+  assert.deepEqual(restored, d);
+  assert.deepEqual(tidy(restored).edges, d.edges);
+  const h = commit({ past: [], present: restored, future: [] }, tidy(restored));
+  assert.deepEqual(undo(h).present, restored);
+  assert.deepEqual(redo(undo(h)).present, h.present);
+  assert.throws(() =>
+    parseDocument({
+      ...d,
+      nodes: [
+        {
+          ...d.nodes[0],
+          data: { kind: "ai", label: "Bad", aiType: "unknown" },
+        },
+      ],
+    }),
+  );
+  assert.throws(() =>
+    parseDocument({
+      ...d,
+      edges: [{ ...d.edges[0], sourceHandle: "unknown" }],
+    }),
+  );
+});

@@ -2,12 +2,13 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
 import { Plus, StickyNote } from "lucide-react";
+import type { Direction } from "@/lib/diagram/actions";
 import type { DiagramNode } from "@/lib/diagram/schema";
 export const NodeActions = createContext<{
   editing: string | null;
   edit: (id: string | null) => void;
   label: (id: string, value: string) => void;
-  grow: (id: string) => void;
+  grow: (id: string, direction: Direction) => void;
 }>({ editing: null, edit: () => {}, label: () => {}, grow: () => {} });
 export default function NodeShape({
   id,
@@ -18,15 +19,58 @@ export default function NodeShape({
   const editing = actions.editing === id;
   return (
     <div
-      className={`diagram-shape ${data.kind} ${selected ? "is-selected" : ""}`}
+      className={`diagram-shape ${data.kind} ${data.kind === "ai" ? `ai-${data.aiType || "llm"}` : ""} ${selected ? "is-selected" : ""}`}
     >
       <Handle
-        type="target"
+        type="source"
         position={Position.Left}
         id="in"
-        aria-label="Incoming connection"
+        aria-label="Left connection"
       />
-      <div className="shape-surface" />
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top"
+        aria-label="Top connection"
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom"
+        aria-label="Bottom connection"
+      />
+      {data.kind === "ai" ? (
+        <svg
+          className="shape-surface ai-symbol"
+          viewBox="0 0 184 92"
+          aria-hidden="true"
+        >
+          {data.aiType === "mcp" ? (
+            <>
+              <path className="pipe-body" d="M54 17H130V91H54Z" />
+              <path className="pipe-highlight" d="M61 20H69V88H61Z" />
+              <path className="pipe-rim" d="M44 1H140V21H44Z" />
+              <path className="symbol-detail" d="M50 17H134M127 26V85" />
+            </>
+          ) : (
+            <>
+              <path
+                className="brain-body"
+                d="M92 13C80 0 62 3 57 12C42 5 28 12 27 24C10 22 2 37 10 48C0 61 10 76 25 75C29 89 48 93 61 84C71 94 87 88 92 81C97 88 113 94 123 84C136 93 155 89 159 75C174 76 184 61 174 48C182 37 174 22 157 24C156 12 142 5 127 12C122 3 104 0 92 13Z"
+              />
+              <path
+                className="symbol-detail"
+                d="M92 13V29M92 68V81M57 12C50 20 54 29 63 30M27 24C26 34 32 38 40 37M10 48C18 45 26 49 26 57M25 75C35 74 42 70 42 64M61 84C54 78 56 72 63 69M127 12C134 20 130 29 121 30M157 24C158 34 152 38 144 37M174 48C166 45 158 49 158 57M159 75C149 74 142 70 142 64M123 84C130 78 128 72 121 69"
+              />
+            </>
+          )}
+        </svg>
+      ) : (
+        <div className="shape-surface" />
+      )}
+      {data.kind === "ai" && (
+        <span className="ai-kind">{(data.aiType || "llm").toUpperCase()}</span>
+      )}
       <div className="shape-content" onDoubleClick={() => actions.edit(id)}>
         {editing ? (
           <LabelInput
@@ -46,6 +90,7 @@ export default function NodeShape({
                 decision: "Decision",
                 system: "System",
                 terminal: "Start / End",
+                ai: "AI",
               }[data.kind]}
           </span>
         )}
@@ -62,23 +107,30 @@ export default function NodeShape({
         type="source"
         position={Position.Right}
         id="out"
-        aria-label="Outgoing connection"
+        aria-label="Right connection"
       />
-      <button
-        data-editor-only
-        className="grow-button nodrag nopan nokey"
-        title="Add connected process"
-        aria-label={`Add step after ${data.label || data.kind}`}
-        onPointerDown={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        onDoubleClick={(e) => e.stopPropagation()}
-        onClick={(e) => {
-          e.stopPropagation();
-          actions.grow(id);
-        }}
-      >
-        <Plus size={15} />
-      </button>
+      {(["right", "left", "top", "bottom"] as const).map((direction) => (
+        <button
+          key={direction}
+          data-editor-only
+          className={`grow-button grow-${direction} nodrag nopan nokey`}
+          title={`Add connected process ${direction}`}
+          aria-label={
+            direction === "right"
+              ? `Add step after ${data.label || data.kind}`
+              : `Add step ${direction} of ${data.label || data.kind}`
+          }
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            actions.grow(id, direction);
+          }}
+        >
+          <Plus size={15} />
+        </button>
+      ))}
     </div>
   );
 }

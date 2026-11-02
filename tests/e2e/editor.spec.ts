@@ -399,3 +399,138 @@ test("handle connections stay attached, reject duplicates, and preserve imported
   await page.getByRole("button", { name: "Cancel", exact: true }).click();
   expect((await state(page)).nodes).toEqual(d.nodes);
 });
+
+test("connections can start and end on every side and survive reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await saved(page);
+  const sides = ["in", "out", "top", "bottom"];
+  const positions = [
+    { x: 500, y: 350 },
+    { x: 160, y: 350 },
+    { x: 840, y: 350 },
+    { x: 500, y: 100 },
+    { x: 500, y: 600 },
+  ];
+  await page.getByLabel("Import drawing file").setInputFiles({
+    name: "sides.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        schemaVersion: 1,
+        id: "sides",
+        title: "Four sides",
+        updatedAt: new Date().toISOString(),
+        nodes: positions.map((position, i) => ({
+          id: `n${i}`,
+          type: "diagram",
+          position,
+          data: { kind: "system", label: `System ${i}` },
+        })),
+        edges: [],
+        viewport: { x: 0, y: 0, zoom: 1 },
+      }),
+    ),
+  });
+  await saved(page);
+  for (const [i, side] of sides.entries()) {
+    const target = ["out", "in", "bottom", "top"][i];
+    await page
+      .locator(`[data-id="n0"] [data-handleid="${side}"]`)
+      .dragTo(
+        page.locator(`[data-id="n${i + 1}"] [data-handleid="${target}"]`),
+      );
+    await saved(page);
+    expect((await state(page)).edges).toHaveLength(i + 1);
+    expect((await state(page)).edges[i]).toMatchObject({
+      source: "n0",
+      target: `n${i + 1}`,
+      sourceHandle: side,
+      targetHandle: target,
+    });
+  }
+  await page.reload();
+  await saved(page);
+  expect(
+    (await state(page)).edges.map(
+      (e: { sourceHandle: string }) => e.sourceHandle,
+    ),
+  ).toEqual(sides);
+  await expect(page.locator(".react-flow__edge-path")).toHaveCount(4);
+});
+
+test("AI hover choices create LLM and MCP shapes and preserve their type", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await saved(page);
+  for (const [i, type] of ["LLM", "MCP"].entries()) {
+    await page.getByRole("button", { name: "AI tool", exact: true }).hover();
+    await page.getByRole("button", { name: type, exact: true }).click();
+    await page
+      .locator(".react-flow__pane")
+      .click({ position: { x: 400 + i * 300, y: 250 } });
+    await label(page, `${type} service`);
+    await saved(page);
+    await expect(
+      page.locator(".diagram-shape.ai .ai-kind").filter({ hasText: type }),
+    ).toHaveCount(1);
+  }
+  await page.reload();
+  await saved(page);
+  expect(
+    (await state(page)).nodes.map(
+      (n: { data: { aiType: string } }) => n.data.aiType,
+    ),
+  ).toEqual(["llm", "mcp"]);
+  await page.locator(".diagram-shape.ai").first().click();
+  await page
+    .getByRole("combobox", { name: "AI type", exact: true })
+    .selectOption("mcp");
+  await saved(page);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await saved(page);
+  expect((await state(page)).nodes[0].data.aiType).toBe("llm");
+});
+
+test("contextual plus creates connected steps left, above, and below", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await label(page, "Origin");
+  await saved(page);
+  for (const direction of ["left", "top", "bottom"]) {
+    await page.getByText("Origin", { exact: true }).click();
+    await page
+      .getByRole("button", {
+        name: `Add step ${direction} of Origin`,
+        exact: true,
+      })
+      .click();
+    await label(page, direction);
+    await saved(page);
+    const d = await state(page);
+    const origin = d.nodes.find(
+      (n: { data: { label: string } }) => n.data.label === "Origin",
+    );
+    const node = d.nodes.find(
+      (n: { data: { label: string } }) => n.data.label === direction,
+    );
+    expect(d.edges.at(-1)).toMatchObject({
+      source: origin.id,
+      target: node.id,
+      sourceHandle: direction === "left" ? "in" : direction,
+      targetHandle:
+        direction === "left" ? "out" : direction === "top" ? "bottom" : "top",
+    });
+    if (direction === "left")
+      expect(node.position.x).toBeLessThan(origin.position.x);
+    if (direction === "top")
+      expect(node.position.y).toBeLessThan(origin.position.y);
+    if (direction === "bottom")
+      expect(node.position.y).toBeGreaterThan(origin.position.y);
+    await page.getByRole("button", { name: "Fit drawing" }).click();
+  }
+});

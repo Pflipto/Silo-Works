@@ -1,6 +1,13 @@
 import { z } from "zod";
 const text = z.string().max(20000);
-export const kinds = ["process", "decision", "system", "terminal"] as const;
+export const kinds = [
+  "process",
+  "decision",
+  "system",
+  "terminal",
+  "ai",
+] as const;
+export const connectionHandle = z.enum(["in", "out", "top", "bottom"]);
 export type NodeKind = (typeof kinds)[number];
 const url = z
   .string()
@@ -30,7 +37,11 @@ export const documentSchema = z
             x: z.number().finite(),
             y: z.number().finite(),
           }),
-          data: z.object({ ...details, kind: z.enum(kinds) }),
+          data: z.object({
+            ...details,
+            kind: z.enum(kinds),
+            aiType: z.enum(["llm", "mcp"]).optional(),
+          }),
         }),
       )
       .max(2000),
@@ -40,8 +51,8 @@ export const documentSchema = z
           id: z.string().min(1),
           source: z.string(),
           target: z.string(),
-          sourceHandle: z.literal("out").optional(),
-          targetHandle: z.literal("in").optional(),
+          sourceHandle: connectionHandle.optional(),
+          targetHandle: connectionHandle.optional(),
           data: z.object(details).optional(),
         }),
       )

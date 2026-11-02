@@ -1,4 +1,11 @@
 import type { DiagramDocument, DiagramNode, NodeKind } from "./schema";
+export type Direction = "left" | "right" | "top" | "bottom";
+export const sideHandles = {
+  left: ["in", "out"],
+  right: ["out", "in"],
+  top: ["top", "bottom"],
+  bottom: ["bottom", "top"],
+} as const;
 export const SIZE = { width: 184, height: 92 };
 export function freePosition(
   nodes: DiagramNode[],
@@ -26,6 +33,7 @@ export function addNode(
   kind: NodeKind,
   position: { x: number; y: number },
   source?: string,
+  direction: Direction = "right",
 ) {
   const id = crypto.randomUUID();
   const n: DiagramNode = {
@@ -46,8 +54,8 @@ export function addNode(
               id: crypto.randomUUID(),
               source,
               target: id,
-              sourceHandle: "out" as const,
-              targetHandle: "in" as const,
+              sourceHandle: sideHandles[direction][0],
+              targetHandle: sideHandles[direction][1],
               data: { label: "" },
             },
           ]
