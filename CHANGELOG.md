@@ -12,3 +12,9 @@
 - ESLint 9 matches the peer requirements of Next.js's React, import, and accessibility plugins; the lockfile is verified with npm ci.
 - Refined the identity toward the brand board: outlined Anton industrial wordmark, engraved silo silhouette, Inter heritage signature, horizontal/stacked vector assets, and a simplified small-size favicon. Font licenses are included; no runtime logo-font dependency.
 - Simplified the empty-state copy, removed the bottom-left tool caption, and aligned the header actions and footer help/attribution group to the right edge.
+
+## Diagram shape and connection improvements
+
+- System uses a database cylinder silhouette.
+- Connections can start/end on all four sides; side IDs persist through save, reload, JSON, and layout. Existing in/out IDs remain compatible.
+- AI shape tool offers LLM/MCP choices on hover, keyboard focus, and click; types remain editable in details and persist locally. No external AI service is involved.

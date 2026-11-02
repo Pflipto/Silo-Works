@@ -73,10 +73,25 @@ export default function DetailsPanel({
                     decision: "Decision",
                     system: "System",
                     terminal: "Start / End",
+                    ai: "AI",
                   }[k]
                 }
               </option>
             ))}
+          </select>
+        </label>
+      )}
+      {node?.data.kind === "ai" && (
+        <label>
+          AI type
+          <select
+            value={node.data.aiType || "llm"}
+            onChange={(e) =>
+              update({ aiType: e.target.value as "llm" | "mcp" })
+            }
+          >
+            <option value="llm">LLM</option>
+            <option value="mcp">MCP</option>
           </select>
         </label>
       )}

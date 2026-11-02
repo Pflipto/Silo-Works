@@ -7,6 +7,7 @@ import {
   Background,
   BackgroundVariant,
   MarkerType,
+  ConnectionMode,
   useReactFlow,
   type Node,
   type Edge,
@@ -21,6 +22,7 @@ import {
   Square,
   Diamond,
   Database,
+  Sparkles,
   Circle,
   Undo2,
   Redo2,
@@ -46,6 +48,7 @@ import DetailsPanel from "./DetailsPanel";
 import Modal from "./Modal";
 import {
   emptyDocument,
+  connectionHandle,
   parseDocument,
   STORAGE_KEY,
   type DiagramDocument,
@@ -65,6 +68,7 @@ const tools = [
   { id: "decision", label: "Decision", key: "D", icon: Diamond },
   { id: "system", label: "System", key: "S", icon: Database },
   { id: "terminal", label: "Start / End", key: "T", icon: Circle },
+  { id: "ai", label: "AI", key: "A", icon: Sparkles },
   { id: "connect", label: "Connect", key: "C", icon: Cable },
 ] as const;
 export default function Editor() {
@@ -82,6 +86,8 @@ function EditorInner() {
   const [status, setStatus] = useState("Loading drawing…");
   const [message, setMessage] = useState("");
   const [tool, setTool] = useState<Tool>("select");
+  const [aiType, setAiType] = useState<"llm" | "mcp">("llm");
+  const [aiMenu, setAiMenu] = useState(false);
   const [space, setSpace] = useState(false);
   const [selection, setSelection] = useState<Selection>({
     nodes: [],
@@ -276,6 +282,7 @@ function EditorInner() {
       let placed = position;
       change((d) => {
         const result = addNode(d, kind, position, source);
+        if (kind === "ai") result.document.nodes.at(-1)!.data.aiType = aiType;
         created = result.id;
         placed = result.document.nodes.at(-1)!.position;
         return result.document;
@@ -294,7 +301,7 @@ function EditorInner() {
         });
       }
     },
-    [change, rf],
+    [change, rf, aiType],
   );
   const connect = useCallback(
     (connection: Connection) => {
@@ -317,8 +324,12 @@ function EditorInner() {
               id: crypto.randomUUID(),
               source: connection.source,
               target: connection.target,
-              sourceHandle: "out" as const,
-              targetHandle: "in" as const,
+              sourceHandle: connectionHandle.parse(
+                connection.sourceHandle || "out",
+              ),
+              targetHandle: connectionHandle.parse(
+                connection.targetHandle || "in",
+              ),
               data: { label: "" },
             },
           ],
@@ -644,7 +655,7 @@ function EditorInner() {
           {tools.map((t, i) => (
             <div
               key={t.id}
-              className={i === 2 || i === 6 ? "tool-divider" : ""}
+              className={`${i === 2 || t.id === "connect" ? "tool-divider" : ""} ${t.id === "ai" ? "ai-tool-group" : ""}`}
             >
               <button
                 className={`tool-button ${tool === t.id ? "active" : ""}`}
@@ -652,6 +663,8 @@ function EditorInner() {
                 aria-pressed={tool === t.id}
                 title={`${t.label} · ${t.key}`}
                 onClick={() => {
+                  if (t.id === "ai") setAiMenu((open) => !open);
+                  else setAiMenu(false);
                   setTool(t.id);
                   setEditing(null);
                   if (t.id === "connect") clearSelection();
@@ -663,6 +676,28 @@ function EditorInner() {
                   <kbd>{t.key}</kbd>
                 </span>
               </button>
+              {t.id === "ai" && (
+                <div
+                  className={`ai-tool-options ${aiMenu ? "is-open" : ""}`}
+                  role="group"
+                  aria-label="AI shape type"
+                >
+                  {(["llm", "mcp"] as const).map((type) => (
+                    <button
+                      key={type}
+                      aria-pressed={aiType === type}
+                      onClick={() => {
+                        setAiType(type);
+                        setTool("ai");
+                        setEditing(null);
+                        setAiMenu(false);
+                      }}
+                    >
+                      {type.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
           <span className="toolbar-caption">TOOLS</span>
@@ -711,6 +746,7 @@ function EditorInner() {
                           : prev.edges.filter((id) => id !== c.id),
                       }));
                 }}
+                connectionMode={ConnectionMode.Loose}
                 onConnect={connect}
                 defaultViewport={doc.viewport}
                 minZoom={0.1}
@@ -769,7 +805,13 @@ function EditorInner() {
                 }}
                 onPaneClick={(e) => {
                   if (
-                    ["process", "decision", "system", "terminal"].includes(tool)
+                    [
+                      "process",
+                      "decision",
+                      "system",
+                      "terminal",
+                      "ai",
+                    ].includes(tool)
                   ) {
                     create(
                       tool as NodeKind,
@@ -780,6 +822,7 @@ function EditorInner() {
                     );
                   } else clearSelection();
                   setMenu(false);
+                  setAiMenu(false);
                 }}
                 onMoveEnd={onViewport}
                 connectionLineStyle={{ stroke: "#A65B3D", strokeWidth: 2 }}

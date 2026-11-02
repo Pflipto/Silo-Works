@@ -21,12 +21,27 @@ export default function NodeShape({
       className={`diagram-shape ${data.kind} ${selected ? "is-selected" : ""}`}
     >
       <Handle
-        type="target"
+        type="source"
         position={Position.Left}
         id="in"
-        aria-label="Incoming connection"
+        aria-label="Left connection"
+      />
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top"
+        aria-label="Top connection"
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom"
+        aria-label="Bottom connection"
       />
       <div className="shape-surface" />
+      {data.kind === "ai" && (
+        <span className="ai-kind">{(data.aiType || "llm").toUpperCase()}</span>
+      )}
       <div className="shape-content" onDoubleClick={() => actions.edit(id)}>
         {editing ? (
           <LabelInput
@@ -46,6 +61,7 @@ export default function NodeShape({
                 decision: "Decision",
                 system: "System",
                 terminal: "Start / End",
+                ai: "AI",
               }[data.kind]}
           </span>
         )}
@@ -62,7 +78,7 @@ export default function NodeShape({
         type="source"
         position={Position.Right}
         id="out"
-        aria-label="Outgoing connection"
+        aria-label="Right connection"
       />
       <button
         data-editor-only
