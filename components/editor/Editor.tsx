@@ -55,7 +55,13 @@ import {
   type NodeKind,
 } from "@/lib/diagram/schema";
 import { commit, undo, redo, type History } from "@/lib/diagram/history";
-import { addNode, removeObjects, SIZE } from "@/lib/diagram/actions";
+import {
+  addNode,
+  removeObjects,
+  SIZE,
+  type Direction,
+  sideHandles,
+} from "@/lib/diagram/actions";
 import { tidy } from "@/lib/diagram/layout";
 import { downloadJson, exportImage } from "@/lib/diagram/export";
 const nodeTypes = { diagram: NodeShape };
@@ -277,11 +283,16 @@ function EditorInner() {
     };
   }, [travel, remove, clearSelection]);
   const create = useCallback(
-    (kind: NodeKind, position: { x: number; y: number }, source?: string) => {
+    (
+      kind: NodeKind,
+      position: { x: number; y: number },
+      source?: string,
+      direction: Direction = "right",
+    ) => {
       let created = "";
       let placed = position;
       change((d) => {
-        const result = addNode(d, kind, position, source);
+        const result = addNode(d, kind, position, source, direction);
         if (kind === "ai") result.document.nodes.at(-1)!.data.aiType = aiType;
         created = result.id;
         placed = result.document.nodes.at(-1)!.position;
@@ -717,15 +728,31 @@ function EditorInner() {
                         : n,
                     ),
                   })),
-                grow: (id) => {
+                grow: (id, direction) => {
                   const source = historyRef.current?.present.nodes.find(
                     (n) => n.id === id,
                   );
                   if (source)
                     create(
                       "process",
-                      { x: source.position.x + 284, y: source.position.y },
+                      {
+                        x:
+                          source.position.x +
+                          (direction === "right"
+                            ? 284
+                            : direction === "left"
+                              ? -284
+                              : 0),
+                        y:
+                          source.position.y +
+                          (direction === "bottom"
+                            ? 192
+                            : direction === "top"
+                              ? -192
+                              : 0),
+                      },
                       id,
+                      direction,
                     );
                 },
               }}
@@ -777,11 +804,24 @@ function EditorInner() {
                   if (tool === "connect") {
                     const source = selection.nodes[0];
                     if (source && source !== n.id) {
+                      const origin = doc.nodes.find(
+                        (node) => node.id === source,
+                      )!;
+                      const dx = n.position.x - origin.position.x;
+                      const dy = n.position.y - origin.position.y;
+                      const direction: Direction =
+                        Math.abs(dx) >= Math.abs(dy)
+                          ? dx >= 0
+                            ? "right"
+                            : "left"
+                          : dy >= 0
+                            ? "bottom"
+                            : "top";
                       connect({
                         source,
                         target: n.id,
-                        sourceHandle: "out",
-                        targetHandle: "in",
+                        sourceHandle: sideHandles[direction][0],
+                        targetHandle: sideHandles[direction][1],
                       });
                       setTool("select");
                     } else if (!_e.shiftKey)

@@ -18,3 +18,6 @@
 - System uses a database cylinder silhouette.
 - Connections can start/end on all four sides; side IDs persist through save, reload, JSON, and layout. Existing in/out IDs remain compatible.
 - AI shape tool offers LLM/MCP choices on hover, keyboard focus, and click; types remain editable in details and persist locally. No external AI service is involved.
+
+- LLM now has a rounded model silhouette; MCP uses a connector-module silhouette.
+- Added contextual connected creation on all four sides, larger drag handles, and position-based side selection for the Connect tool.

@@ -2,12 +2,13 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
 import { Plus, StickyNote } from "lucide-react";
+import type { Direction } from "@/lib/diagram/actions";
 import type { DiagramNode } from "@/lib/diagram/schema";
 export const NodeActions = createContext<{
   editing: string | null;
   edit: (id: string | null) => void;
   label: (id: string, value: string) => void;
-  grow: (id: string) => void;
+  grow: (id: string, direction: Direction) => void;
 }>({ editing: null, edit: () => {}, label: () => {}, grow: () => {} });
 export default function NodeShape({
   id,
@@ -18,7 +19,7 @@ export default function NodeShape({
   const editing = actions.editing === id;
   return (
     <div
-      className={`diagram-shape ${data.kind} ${selected ? "is-selected" : ""}`}
+      className={`diagram-shape ${data.kind} ${data.kind === "ai" ? `ai-${data.aiType || "llm"}` : ""} ${selected ? "is-selected" : ""}`}
     >
       <Handle
         type="source"
@@ -80,21 +81,28 @@ export default function NodeShape({
         id="out"
         aria-label="Right connection"
       />
-      <button
-        data-editor-only
-        className="grow-button nodrag nopan nokey"
-        title="Add connected process"
-        aria-label={`Add step after ${data.label || data.kind}`}
-        onPointerDown={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        onDoubleClick={(e) => e.stopPropagation()}
-        onClick={(e) => {
-          e.stopPropagation();
-          actions.grow(id);
-        }}
-      >
-        <Plus size={15} />
-      </button>
+      {(["right", "left", "top", "bottom"] as const).map((direction) => (
+        <button
+          key={direction}
+          data-editor-only
+          className={`grow-button grow-${direction} nodrag nopan nokey`}
+          title={`Add connected process ${direction}`}
+          aria-label={
+            direction === "right"
+              ? `Add step after ${data.label || data.kind}`
+              : `Add step ${direction} of ${data.label || data.kind}`
+          }
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            actions.grow(id, direction);
+          }}
+        >
+          <Plus size={15} />
+        </button>
+      ))}
     </div>
   );
 }

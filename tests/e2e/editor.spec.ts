@@ -493,3 +493,44 @@ test("AI hover choices create LLM and MCP shapes and preserve their type", async
   await saved(page);
   expect((await state(page)).nodes[0].data.aiType).toBe("llm");
 });
+
+test("contextual plus creates connected steps left, above, and below", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Add your first shape" }).click();
+  await label(page, "Origin");
+  await saved(page);
+  for (const direction of ["left", "top", "bottom"]) {
+    await page.getByText("Origin", { exact: true }).click();
+    await page
+      .getByRole("button", {
+        name: `Add step ${direction} of Origin`,
+        exact: true,
+      })
+      .click();
+    await label(page, direction);
+    await saved(page);
+    const d = await state(page);
+    const origin = d.nodes.find(
+      (n: { data: { label: string } }) => n.data.label === "Origin",
+    );
+    const node = d.nodes.find(
+      (n: { data: { label: string } }) => n.data.label === direction,
+    );
+    expect(d.edges.at(-1)).toMatchObject({
+      source: origin.id,
+      target: node.id,
+      sourceHandle: direction === "left" ? "in" : direction,
+      targetHandle:
+        direction === "left" ? "out" : direction === "top" ? "bottom" : "top",
+    });
+    if (direction === "left")
+      expect(node.position.x).toBeLessThan(origin.position.x);
+    if (direction === "top")
+      expect(node.position.y).toBeLessThan(origin.position.y);
+    if (direction === "bottom")
+      expect(node.position.y).toBeGreaterThan(origin.position.y);
+    await page.getByRole("button", { name: "Fit drawing" }).click();
+  }
+});
