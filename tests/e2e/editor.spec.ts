@@ -545,7 +545,7 @@ test("header reset confirms, cancels safely, and clears the saved drawing", asyn
   await saved(page);
   const original = await state(page);
   const reset = page.getByRole("button", {
-    name: "Reset drawing",
+    name: "Scrap-It-All",
     exact: true,
   });
   await reset.click();

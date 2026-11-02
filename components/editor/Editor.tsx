@@ -555,6 +555,8 @@ function EditorInner() {
           </div>
           <button
             className="tidy-button"
+            aria-label="Tidy Up"
+            title="Tidy Up"
             disabled={!doc?.nodes.length}
             onClick={() => {
               change(tidy);
@@ -567,8 +569,10 @@ function EditorInner() {
           </button>
           <button
             className="reset-button"
-            aria-label="Reset drawing"
-            title="Back to the invention room!"
+            aria-label="Scrap-It-All"
+            title={
+              "Oompa Loompa doompety destruction,\nDo not disturb this button's conduction.\nIf you are greedy and give it a shove,\nYou masterpiece blows to the heavens above."
+            }
             disabled={!doc || exporting}
             onClick={() => {
               setMenu(false);
@@ -577,7 +581,7 @@ function EditorInner() {
             }}
           >
             <RotateCcw size={15} />
-            <span>Reset</span>
+            <span>Scrap-It-All</span>
           </button>
           <div className="export-container">
             <button
