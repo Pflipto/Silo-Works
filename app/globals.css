@@ -1270,3 +1270,11 @@ select {
     display: none;
   }
 }
+
+.modal-actions .primary.reset-confirm {
+  background: var(--rust);
+  color: #fffaf0;
+}
+.modal-actions .primary.reset-confirm:hover:not(:disabled) {
+  background: #7d3f29;
+}

@@ -1060,7 +1060,7 @@ function EditorInner() {
                 Download current JSON
               </button>
               <button
-                className="primary"
+                className={resetRequested ? "primary reset-confirm" : "primary"}
                 onClick={() => replaceDocument(replacement)}
               >
                 {resetRequested ? "Reset drawing" : "Replace drawing"}
