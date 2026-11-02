@@ -39,7 +39,35 @@ export default function NodeShape({
         id="bottom"
         aria-label="Bottom connection"
       />
-      <div className="shape-surface" />
+      {data.kind === "ai" ? (
+        <svg
+          className="shape-surface ai-symbol"
+          viewBox="0 0 184 92"
+          aria-hidden="true"
+        >
+          {data.aiType === "mcp" ? (
+            <>
+              <path className="pipe-body" d="M29 23H155V87H29Z" />
+              <path className="pipe-highlight" d="M40 26H50V84H40Z" />
+              <path className="pipe-rim" d="M12 5H172V27H12Z" />
+              <path className="symbol-detail" d="M20 22H164M153 32V80" />
+            </>
+          ) : (
+            <>
+              <path
+                className="brain-body"
+                d="M92 13C80 0 62 3 57 12C42 5 28 12 27 24C10 22 2 37 10 48C0 61 10 76 25 75C29 89 48 93 61 84C71 94 87 88 92 81C97 88 113 94 123 84C136 93 155 89 159 75C174 76 184 61 174 48C182 37 174 22 157 24C156 12 142 5 127 12C122 3 104 0 92 13Z"
+              />
+              <path
+                className="symbol-detail"
+                d="M92 13V29M92 68V81M57 12C50 20 54 29 63 30M27 24C26 34 32 38 40 37M10 48C18 45 26 49 26 57M25 75C35 74 42 70 42 64M61 84C54 78 56 72 63 69M127 12C134 20 130 29 121 30M157 24C158 34 152 38 144 37M174 48C166 45 158 49 158 57M159 75C149 74 142 70 142 64M123 84C130 78 128 72 121 69"
+              />
+            </>
+          )}
+        </svg>
+      ) : (
+        <div className="shape-surface" />
+      )}
       {data.kind === "ai" && (
         <span className="ai-kind">{(data.aiType || "llm").toUpperCase()}</span>
       )}

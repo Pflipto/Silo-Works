@@ -1167,32 +1167,48 @@ select {
   left: calc(50% - 12.5px);
   right: auto;
 }
-.diagram-shape.ai-llm .shape-surface {
-  inset: 2px 0;
-  border-radius: 45% 45% 35% 35% / 35% 35% 45% 45%;
-  background: #eee2ca;
+/* Vector silhouettes remain crisp in the canvas and image exports. */
+.diagram-shape.ai .shape-surface.ai-symbol {
+  inset: 0;
+  width: 184px;
+  height: 92px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  stroke: var(--ink);
+  stroke-width: 1.6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.diagram-shape.ai-mcp .shape-surface {
-  inset: 2px 10px;
-  border-radius: 2px;
-  border: 4px double var(--ink);
-  background: #e8ede3;
+.brain-body {
+  fill: #eee2ca;
 }
-.diagram-shape.ai-mcp .shape-surface::before,
-.diagram-shape.ai-mcp .shape-surface::after {
-  content: "";
-  position: absolute;
-  top: 20px;
-  width: 12px;
-  height: 40px;
-  background: #e8ede3;
-  border: 1.6px solid var(--ink);
+.pipe-body {
+  fill: #c2d0af;
 }
-.diagram-shape.ai-mcp .shape-surface::before {
-  left: -13px;
+.pipe-rim {
+  fill: #d9e3ca;
 }
-.diagram-shape.ai-mcp .shape-surface::after {
-  right: -13px;
+.pipe-highlight {
+  fill: #e1e9d5;
+  stroke: none;
+}
+.symbol-detail {
+  fill: none;
+}
+.diagram-shape.ai-llm .shape-content {
+  padding: 28px 38px 20px;
+}
+.diagram-shape.ai-mcp .shape-content {
+  padding: 30px 36px 12px;
+}
+.diagram-shape.ai-llm .ai-kind {
+  top: 25px;
+}
+.diagram-shape.ai-mcp .ai-kind {
+  top: 9px;
 }
 .react-flow__handle {
   width: 12px !important;
